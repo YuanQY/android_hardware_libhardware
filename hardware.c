@@ -25,6 +25,7 @@
 #include <limits.h>
 
 #define LOG_TAG "HAL"
+#define LOG_NDEBUG 0
 #include <utils/Log.h>
 
 /** Base path of the hal modules */
@@ -66,6 +67,8 @@ static int load(const char *id,
     void *handle;
     struct hw_module_t *hmi;
 
+    // Engle, 添加调试信息
+    ALOGD("load: module=%s", path);
     /*
      * load the symbols resolving undefined symbols before
      * dlopen returns. Since RTLD_GLOBAL is not or'd in with
