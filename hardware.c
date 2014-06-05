@@ -31,6 +31,9 @@
 /** Base path of the hal modules */
 #define HAL_LIBRARY_PATH1 "/system/lib/hw"
 #define HAL_LIBRARY_PATH2 "/vendor/lib/hw"
+// Engle, add for MTK, start
+#define HAL_LIBRARY_PATH3 "/system/lib"
+// Engle, add for MTK, end
 
 /**
  * There are a set of variant filename for modules. The form of the filename
@@ -46,6 +49,7 @@
 static const char *variant_keys[] = {
     "ro.hardware",  /* This goes first so that it can pick up a different
                        file on the emulator. */
+    "ro.mtk.hardware", // Engle, add for MTK                   
     "ro.product.board",
     "ro.board.platform",
     "ro.arch"
@@ -150,6 +154,11 @@ int hw_get_module_by_class(const char *class_id, const char *inst,
             if (property_get(variant_keys[i], prop, NULL) == 0) {
                 continue;
             }
+            // Engel, add for MTK, start
+            snprintf(path, sizeof(path), "%s/lib%s.%s.so",
+                     HAL_LIBRARY_PATH3, name, prop);
+            if (access(path, R_OK) == 0) break;
+            // Engel, add for MTK, end
             snprintf(path, sizeof(path), "%s/%s.%s.so",
                      HAL_LIBRARY_PATH2, name, prop);
             if (access(path, R_OK) == 0) break;
@@ -158,6 +167,11 @@ int hw_get_module_by_class(const char *class_id, const char *inst,
                      HAL_LIBRARY_PATH1, name, prop);
             if (access(path, R_OK) == 0) break;
         } else {
+        	  // Engel, add for MTK, start
+        	  snprintf(path, sizeof(path), "%s/lib%s.default.so",
+                     HAL_LIBRARY_PATH3, name);
+            if (access(path, R_OK) == 0) break;
+            // Engel, add for MTK, end
             snprintf(path, sizeof(path), "%s/%s.default.so",
                      HAL_LIBRARY_PATH2, name);
             if (access(path, R_OK) == 0) break;
